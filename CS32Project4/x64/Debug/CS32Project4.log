@@ -1,0 +1,9 @@
+﻿  PointToPointRouter.cpp
+  DeliveryOptimizer.cpp
+C:\Users\btruo\OneDrive\Documents\GitHub\CS32Project4\DeliveryOptimizer.cpp(100,18): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  DeliveryPlanner.cpp
+  main.cpp
+  StreetMap.cpp
+C:\Users\btruo\OneDrive\Documents\GitHub\CS32Project4\StreetMap.cpp(13,65): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Generating Code...
+  CS32Project4.vcxproj -> C:\Users\btruo\OneDrive\Documents\GitHub\CS32Project4\x64\Debug\CS32Project4.exe
