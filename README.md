@@ -1,7 +1,5 @@
-
-
-CS32 Taken with Professor Nachenberg 
-Winter 2020
+#CS32
+  Winter 2020 Taken with Professor Nachenberg 
 
 Scores| |
 |----|:---:|
