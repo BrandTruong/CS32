@@ -1,4 +1,7 @@
-Taken with Professor Nachenberg Winter 2020
+
+
+CS32 Taken with Professor Nachenberg 
+Winter 2020
 
 Scores| |
 |----|:---:|
@@ -11,3 +14,6 @@ Project 1| 100/100
 Project 2|88/100
 Project 3|100/100
 Project 4|81/100
+
+Notes:
+Project 4's PointToPointRouter.cpp is broken
