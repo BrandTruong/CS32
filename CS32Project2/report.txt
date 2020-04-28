@@ -1,0 +1,257 @@
+1. Description
+I implemented my Map class by using a doubly-linked list. It is not a circular linked list and instead uses nullptrs to iterate through the list. There is no dummy node to point to the tail and head. Map consists of three data members, m_size, Node* head and Node* tail
+
+The default constructor of Map dynamically allocates a Node like this:
+
+Head/Tail Node
+
+KeyType/ValueType=undefined
+prev=nullptr
+next=nullptr
+
+m_size remains 0 so that empty functions still work. The add helper function has a special case to replace this Node if it is empty
+An example Map of size 3 looks like this:
+
+Head Node 0			1				Tail Node 2(m_size-1)
+
+KeyType=something		KeyType=something		KeyType=something
+ValueType=something else	ValueType=something else	ValueType=something else
+prev=nullptr			Head Node <== prev		Node 1 <== prev
+next ==> Node 1			next ==> Tail Node		next=nullptr
+
+
+2. Pseudocode
+public:
+    Map()
+	{
+	dynamically allocates a new Node with nullptrs and set head and tail pointers to it
+	}
+    Map(const Map& other)
+	{
+	repeatedly through other's entire list
+		use add function with others key and value
+	}
+    Map& operator=(const Map& other)
+	{
+	if other is not the same as this
+		create temp Map with copy constructor to other
+		swap this with temp Map
+	}
+    ~Map()
+	{
+	ptr set to head
+	repeatedly through the entire list
+		save ptr->next to a temp ptr
+		delete ptr
+		set ptr to temp ptr
+	}
+    bool empty() const
+	{
+	return m_size==0
+	}
+    int size() const;
+	{
+	return m_size
+	}
+    bool insert(const KeyType& key, const ValueType& value)
+	{
+	if contains function is false
+		use add function to insert new Node
+		return true
+	return false
+	}
+    bool update(const KeyType& key, const ValueType& value)
+	{
+	ptr set to head
+	repeatedly through the entire list
+		if ptr->m_key is equal to key
+			change values
+			return true
+	return false
+	}
+    bool insertOrUpdate(const KeyType& key, const ValueType& value)
+	{
+	if update function fails
+		insert instead
+	return true
+	}
+    bool erase(const KeyType& key)
+	{
+	repeatedly through entire list
+		if ptr is at key
+			if they are not nullptr (not head or tail)
+				relink prev Node's next and next Node's prev to each other
+			else 
+				change Tail to prev or Head to next, then set Tail->next to nullptr or Head->prev to nullptr
+			delete Node at ptr
+			decrease size
+			return true
+	return false
+	}
+    bool contains(const KeyType& key) const
+	{
+	repeatedly through entire list
+		if key at ptr matches with key
+			return true
+	return false
+	}
+    bool get(const KeyType& key, ValueType& value) const
+	{
+	repeatedly through entire list
+		if key at ptr matches with key
+			change value parameter to value at Node
+			return true
+	return false
+	}
+    bool get(int i, KeyType& key, ValueType& value) const
+	{
+	if i is not valid position
+		return false
+	iterate from 0 to i
+		change value and key parameters to value and key at Node
+	}
+	return true
+    void swap(Map& other)
+	{
+	create temp pointers to this head and tail and temp int size
+	this head and tail set to others head and tail, size set to other size
+	other head and tail set to temp pointers, other size set to temp size
+	}
+    //Testing function
+    void dump() const
+	{
+	repeatedly through entire list
+		cerr the key and values
+	}
+private:
+    void add(const KeyType& key, const ValueType& value)
+	{
+	if size is 0
+		set key and values to node pointed to by head, increment size, then return
+	create dynamically allocated Node temp with key and value
+	set tail's next ptr to Node temp
+	set Node temp's prev ptr to tail and next to nullptr
+	set tail to temp
+	increment m_size
+	}
+};
+//NonMember Function Declaration
+bool combine(const Map& m1, const Map& m2, Map& result)
+	{
+	Create local maps tempm1, tempm2 to avoid aliasing
+	if result is not empty, then swap with empty map
+	repeatedly through entire tempm1 list
+		insert value and key if not same key in tempm2 or if same key, then same value as well
+	repeatedly through entire tempm2 list
+		insert value and key if not already in result or if not same key in tempm1
+	}
+void reassign(const Map& m, Map& result)
+	{
+	skips if empty list
+	if no aliasing and result is not empty
+		swap result with empty map
+	assignment operator result to m
+	save head value to temp and change with tail value
+	repeatedly through result from Node before tail to head
+		move values one to the right
+		if at head, then uses temp to move value to right instead
+	}
+
+3. Test Cases
+Test cases were done on both visual studio and g32 by calling two functions, testPublic and testNonMember
+
+void testPublic();
+void testNonMember();
+
+int main() //test cases
+{
+    cerr << "Testing Public\n" << endl;
+    testPublic();
+    cerr << "Testing Private\n" << endl;
+    testNonMember();
+    cerr << "Reached end, passed all tests POG" << endl;
+}
+void testPublic() //tests public functions and cerr results
+{
+
+    Map* m = new Map;
+    assert(m->insert("first", 1.1));
+    m->dump();
+    assert(m->insert("second", 2.2));
+    cerr << "\nm has new key \n" << endl;
+    m->dump();
+    Map* a = new Map(*m);
+    cerr << "\nNew Map a is created with copy constructor\n" << endl;
+    a->dump();
+    assert(a->insert("third", 3.3));
+    cerr << "\na has new key \n" << endl;
+    a->dump();
+    a->swap(*m);
+    cerr << "\nm swapped with a \n" << endl;
+    a->dump();
+    cerr << "\nPrinting out a ^^^ | m vvv\n" << endl;
+    m->dump();
+    assert(!m->empty()); //m should not be empty
+    assert(a->size() == 2); //a should be 2 nodes
+    assert(!m->insert("second", 2.2)); //should not insert
+    assert(m->insertOrUpdate("second", 4.5)); //second should be 4.5 value now
+    cerr << "\nValue changed\n" << endl;
+    m->dump();
+    assert(m->insertOrUpdate("fourth", 4.5));
+    cerr << "\ninserted new node\n" << endl;
+    m->dump();
+    KeyType test;
+    ValueType test2;
+    assert(!m->get(4, test, test2)); //return false
+    cerr << "\nnode at pos 4 does not exist\n" << endl;
+    assert(a->get("first", test2));
+    cerr << "\nValue at key 'first' is " << test2 << endl << endl;
+    assert(m->contains("fourth")); //should find fourth then erase, then check to see if it is erased properly
+    assert(m->erase("fourth"));
+    assert(!m->contains("fourth"));
+    cerr << "\nno longer contains fourth\n" << endl;
+    m->dump();
+    assert(m->insert("fifth", 2.2));
+    assert(m->erase("first"));
+    cerr << "\nnew node fifth, deleted first\n" << endl;
+    m->dump();
+    delete m;
+    delete a;
+}
+void testNonMember() //tests combine and reassign
+{
+    Map m;
+    Map a;
+    Map result;
+    m.insert("Fred", 123.0);
+    m.insert("Ethel", 456.0);
+    m.insert("Lucy",  789.0);
+    a.insert("Lucy" , 789.0);
+    a.insert("Ricky" , 321.0);
+    assert(combine(m, a, result)); //combine returns true
+    result.dump();
+    cerr << endl << endl;
+    Map n(m);
+    Map o(a);
+    o.update("Lucy", 654.0);
+    assert(!combine(n, o, result)); //combine returns false
+    result.dump();
+    cerr << endl << endl;
+    assert(combine(n, n, result)); //returns true, copy of n
+    cerr << "Prints map n == m" << endl;
+    result.dump();
+    cerr << endl << endl;
+    assert(combine(m, a, m)); //return true, alias test
+    m.dump();
+    cerr << endl << endl;
+    reassign(m, m); //checks aliasing and reassign
+    m.dump();
+    /*
+    Head is Fred: 321
+    Ethel: 123
+    Lucy: 456
+    Tail is Ricky: 789
+    */
+    reassign(m, o);
+    o.dump();
+}
