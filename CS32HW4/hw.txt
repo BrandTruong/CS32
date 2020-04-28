@@ -1,0 +1,14 @@
+Question 2.
+The call to Map<Coord, int> causes a compilation error since the Coord class does not have a defined comparison operator to it. Map's insert function uses the find function to check if there is a duplicate KeyValue such that p != m_head && p->m_key != key; The problem is that Map uses the coord class which has no defined != operator, thus resulting in compiler error.
+
+Question 3a.
+The time complexity of the problem is O(N^3) since there are three nested for loops, all of which run N times. Ignoring coefficients, this means that the time complexity is N*N*N.
+
+Question 3b.
+The time complexity of the problem is O(N^3) still since we evaluate the time complexity at the worst case. When the first loop is at its max, N-1, the inner loop will run N-1 times. Since we evaluate the highest order, it will still go to O(N^3) since N*(N-1)*N=N^3-N^2, which becomes N^3 since we ignore everything except the highest order.
+
+Question 4a.
+Assuming worst case, the time complexity of th efunction reassign would be O(N^2), since within the for loop, which runs N times, the functions get (with three parameters) and insert is called. Since the functions get and insert uses a for loop that runs a max of N (dropping coefficients) times, this means that we should expect N*N=N^2.
+
+Question 4b.
+The time complexity of Map's reassign is O(N), which is better than the implementation in part a. This is because it does not use get or insert inside the for loop, which thus means it will only run a max of N times.
